@@ -20,7 +20,8 @@
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@partials/*": ["src/assets/partials/partials.scss"]
+      "@partials/*": ["src/assets/partials/partials.scss"],
+      "@ui/*": ["src/ui/*"]
     },
 
     /* Linting */
