@@ -1,3 +1,4 @@
+import Pagination from "../pagination/Pagination";
 import styles from "./Table.module.scss";
 import TableCategories from "./tableCategories/TableCategories";
 import TableRecord from "./tableRecord/TableRecord";
@@ -16,6 +17,7 @@ const Table = () => {
       <TableRecord />
       <TableRecord />
       <TableRecord />
+      <Pagination />
     </div>
   );
 };

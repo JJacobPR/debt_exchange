@@ -1,0 +1,22 @@
+@use "@partials" as p;
+@use "sass:color";
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.pagination-button {
+  color: white;
+  background-color: p.$dark-blue;
+  border: none;
+  padding: 0.5rem;
+  width: 2rem;
+  font-size: clamp(0.375rem, 0.2308rem + 0.641vw, 1rem);
+  cursor: pointer;
+
+  &:hover {
+    background-color: color.adjust(p.$dark-blue, $lightness: 20%);
+  }
+}
