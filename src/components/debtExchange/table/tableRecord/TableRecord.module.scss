@@ -1,0 +1,23 @@
+@use "@partials" as p;
+
+.debt-table-record {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.debt-table-record-content {
+  display: flex;
+  gap: 10%;
+  font-size: clamp(0.5rem, 0.2692rem + 1.0256vw, 1.5rem);
+  color: p.$dark-blue;
+
+  p {
+    width: 100%;
+  }
+}
+
+.debt-table-record-line {
+  border: none;
+  border-top: 1px solid p.$gray-lines;
+}

@@ -1,0 +1,9 @@
+@use "@partials" as p;
+
+.debt-table {
+  max-width: 1920px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 7%;
+  gap: 1rem;
+}

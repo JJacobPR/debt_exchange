@@ -1,0 +1,35 @@
+@use "@partials" as p;
+
+.debt-table-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.debt-table-categories-content {
+  display: flex;
+  gap: 10%;
+  font-size: clamp(0.5rem, 0.4423rem + 0.2564vw, 0.75rem);
+  color: p.$gray-text;
+
+  p {
+    width: 100%;
+  }
+}
+
+.debt-table-categories-line {
+  border: none;
+  border-top: 1px solid p.$gray-lines;
+}
+
+.active {
+  &::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: url("@assets/img/bxs_down-arrow.svg") no-repeat center;
+    background-size: contain;
+    margin-left: 0.5rem;
+  }
+}
