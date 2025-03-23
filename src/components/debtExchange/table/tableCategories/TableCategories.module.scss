@@ -1,4 +1,5 @@
 @use "@partials" as p;
+@use "sass:color";
 
 .debt-table-categories {
   display: flex;
@@ -20,6 +21,17 @@
 .debt-table-categories-line {
   border: none;
   border-top: 1px solid p.$gray-lines;
+}
+
+.debt-table-categories-nip,
+.debt-table-categories-debtor,
+.debt-table-categories-amount,
+.debt-table-categories-date {
+  cursor: pointer;
+
+  &:hover {
+    color: color.adjust(p.$gray-text, $lightness: -20%);
+  }
 }
 
 .active {

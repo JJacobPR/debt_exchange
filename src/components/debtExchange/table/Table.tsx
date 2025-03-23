@@ -1,6 +1,6 @@
 import styles from "./Table.module.scss";
 import TableCategories from "./tableCategories/TableCategories";
-import TableRecord from "./tableRecord/tableRecord";
+import TableRecord from "./tableRecord/TableRecord";
 
 const Table = () => {
   return (

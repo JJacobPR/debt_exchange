@@ -1,4 +1,5 @@
 @use "@partials" as p;
+@use "sass:color";
 
 .header-wrapper {
   background-color: p.$dark-blue;
@@ -29,10 +30,15 @@
       height: 100%;
       padding: 1rem 0.5rem;
       font-size: clamp(0.75rem, 0.5769rem + 0.7692vw, 1.5rem);
+      cursor: pointer;
 
       @media screen and (max-width: 960px) {
         width: 40%;
         padding: 1rem 0;
+      }
+
+      &:hover {
+        background-color: color.adjust(p.$red, $lightness: 20%);
       }
     }
 
@@ -45,6 +51,7 @@
 
     input:focus {
       outline: none;
+      background-color: color.adjust(white, $lightness: -10%);
     }
   }
 }
