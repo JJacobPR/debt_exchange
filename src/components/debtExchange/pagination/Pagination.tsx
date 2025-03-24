@@ -1,13 +1,21 @@
 import styles from "./Pagination.module.scss";
 
-const Pagination = () => {
+type paginationProps = {
+  totalPages: number;
+  currentPage: number;
+  goToPage: (page: number) => void;
+};
+
+const Pagination = ({ totalPages, currentPage, goToPage }: paginationProps) => {
   return (
     <div className={styles["pagination"]}>
-      <button className={styles["pagination-button"]}>1</button>
-      <button className={styles["pagination-button"]}>2</button>
-      <button className={styles["pagination-button"]}>3</button>
-      <button className={styles["pagination-button"]}>4</button>
-      <button className={styles["pagination-button"]}>10</button>
+      {Array.from({ length: totalPages }, (_, index) => index + 1)
+        .filter((page) => totalPages <= 3 || Math.abs(page - currentPage) <= 1)
+        .map((page) => (
+          <button key={page} className={`${styles["pagination-button"]} ${page === currentPage ? styles["active"] : ""}`} onClick={() => goToPage(page)} disabled={page === currentPage}>
+            {page}
+          </button>
+        ))}
     </div>
   );
 };

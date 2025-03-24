@@ -45,6 +45,12 @@
     background-size: contain;
     margin-left: 0.5rem;
   }
+
+  @media screen and (max-width: 960px) {
+    &::after {
+      display: none;
+    }
+  }
 }
 
 .desc {
@@ -57,5 +63,11 @@
     background: url("@assets/img/bxs_up-arrow.svg") no-repeat center;
     background-size: contain;
     margin-left: 0.5rem;
+  }
+
+  @media screen and (max-width: 960px) {
+    &::after {
+      display: none;
+    }
   }
 }

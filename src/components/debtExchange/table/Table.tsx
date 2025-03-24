@@ -4,6 +4,7 @@ import TableCategories from "./tableCategories/TableCategories";
 import TableRecord from "./tableRecord/TableRecord";
 import LoadingCircle from "@ui/loadingCircle/LoadingCircle";
 import { useTableContext } from "@store/tableContext";
+import usePagination from "@hooks/usePagination";
 
 type tableItem = {
   Id: number;
@@ -15,13 +16,16 @@ type tableItem = {
 
 const Table = () => {
   const { rows: data, loading, error } = useTableContext();
+  const { currentPage, totalPages, currentData, goToPage } = usePagination(data, 10);
+  console.log(currentData);
 
   return (
     <div className={styles["debt-table"]}>
       <TableCategories />
       {loading && <LoadingCircle />}
-      {!loading && !error && data && data.map((item: tableItem) => <TableRecord key={item.Id} name={item.Name} nip={item.NIP} value={item.Value} date={item.Date} />)}
-      <Pagination />
+      {!loading && !error && data && currentData.map((item: tableItem) => <TableRecord key={item.Id} name={item.Name} nip={item.NIP} value={item.Value} date={item.Date} />)}
+      {!loading && !error && data && data.length === 0 && <p className={styles["no-data"]}>Brak wyników dla twoich kryteriów</p>}
+      {!loading && !error && totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} goToPage={goToPage} />}
     </div>
   );
 };

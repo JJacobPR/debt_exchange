@@ -20,3 +20,7 @@
     background-color: color.adjust(p.$dark-blue, $lightness: 20%);
   }
 }
+
+.active {
+  background-color: color.adjust(p.$dark-blue, $lightness: 20%);
+}
