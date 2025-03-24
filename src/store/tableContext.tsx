@@ -13,6 +13,8 @@ type tableContextType = {
   rows: tableItem[];
   loading?: boolean;
   error?: string;
+  currentSearchKey?: keyof tableItem;
+  currentSearchOrder?: "asc" | "desc";
   searchRows: (phrase: string) => void;
   sortRows: (key: keyof tableItem, order: "asc" | "desc") => void;
   getTop10Debts: () => void;
@@ -24,6 +26,8 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
   const [rows, setRows] = useState<tableItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [currentOrderKey, setCurrentOrderKey] = useState<keyof tableItem>("Name");
+  const [currentOrder, setCurrentOrder] = useState<"asc" | "desc">("asc");
 
   const { data, isLoading, error: fetchError } = useFetch<tableItem[]>("https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetTopDebts");
 
@@ -39,7 +43,13 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [data, isLoading, fetchError]);
 
+  const setOrderOptions = (key: keyof tableItem, order: "asc" | "desc") => {
+    setCurrentOrderKey(key);
+    setCurrentOrder(order);
+  };
+
   const sortRows = (key: keyof tableItem, order: "asc" | "desc" = "asc") => {
+    setOrderOptions(key, order);
     const sortedRows = [...rows].sort((a, b) => {
       if (a[key] < b[key]) {
         return order === "asc" ? -1 : 1;
@@ -61,7 +71,18 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("Failed to fetch data");
       }
 
-      const data = await response.json();
+      const data: tableItem[] = await response.json();
+
+      data.sort((a, b) => {
+        if (a[currentOrderKey] < b[currentOrderKey]) {
+          return currentOrder === "asc" ? -1 : 1;
+        }
+        if (a[currentOrderKey] > b[currentOrderKey]) {
+          return currentOrder === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+
       setRows(data);
       setError(undefined);
     } catch (err: any) {
@@ -86,7 +107,16 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("Failed to fetch data");
       }
 
-      const data = await response.json();
+      const data: tableItem[] = await response.json();
+      data.sort((a, b) => {
+        if (a[currentOrderKey] < b[currentOrderKey]) {
+          return currentOrder === "asc" ? -1 : 1;
+        }
+        if (a[currentOrderKey] > b[currentOrderKey]) {
+          return currentOrder === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
       setRows(data);
       setError(undefined);
     } catch (err: any) {
