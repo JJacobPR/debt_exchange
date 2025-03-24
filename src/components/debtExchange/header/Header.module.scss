@@ -6,6 +6,7 @@
 }
 
 .header {
+  position: relative;
   max-width: 1920px;
   display: flex;
   flex-direction: column;
@@ -54,4 +55,16 @@
       background-color: color.adjust(white, $lightness: -10%);
     }
   }
+}
+
+.warning {
+  position: absolute;
+  bottom: 20%;
+  color: red;
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+
+.warning-fade-in {
+  opacity: 1;
 }
