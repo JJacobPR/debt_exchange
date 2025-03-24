@@ -25,7 +25,7 @@
 
 .debt-table-categories-nip,
 .debt-table-categories-debtor,
-.debt-table-categories-amount,
+.debt-table-categories-value,
 .debt-table-categories-date {
   cursor: pointer;
 
@@ -34,13 +34,27 @@
   }
 }
 
-.active {
+.asc {
+  color: color.adjust(p.$gray-text, $lightness: -20%);
   &::after {
     content: "";
     display: inline-block;
     width: 10px;
     height: 10px;
     background: url("@assets/img/bxs_down-arrow.svg") no-repeat center;
+    background-size: contain;
+    margin-left: 0.5rem;
+  }
+}
+
+.desc {
+  color: color.adjust(p.$gray-text, $lightness: -20%);
+  &::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: url("@assets/img/bxs_up-arrow.svg") no-repeat center;
     background-size: contain;
     margin-left: 0.5rem;
   }

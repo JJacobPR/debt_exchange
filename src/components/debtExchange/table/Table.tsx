@@ -4,7 +4,6 @@ import TableCategories from "./tableCategories/TableCategories";
 import TableRecord from "./tableRecord/TableRecord";
 import LoadingCircle from "@ui/loadingCircle/LoadingCircle";
 import { useTableContext } from "@store/tableContext";
-import { use, useEffect } from "react";
 
 type tableItem = {
   Id: number;

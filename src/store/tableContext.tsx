@@ -14,6 +14,7 @@ type tableContextType = {
   loading?: boolean;
   error?: string;
   searchRows: (phrase: string) => void;
+  sortRows: (key: keyof tableItem, order: "asc" | "desc") => void;
 };
 
 const TableContext = createContext<tableContextType | null>(null);
@@ -27,7 +28,7 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (data) {
-      setRows(data);
+      setRows(data.sort((a, b) => (a.Name < b.Name ? -1 : 1)));
     }
 
     setLoading(isLoading);
@@ -36,6 +37,19 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
       setError(fetchError);
     }
   }, [data, isLoading, fetchError]);
+
+  const sortRows = (key: keyof tableItem, order: "asc" | "desc" = "asc") => {
+    const sortedRows = [...rows].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return order === "asc" ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return order === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+    setRows(sortedRows);
+  };
 
   const searchRows = async (phrase: string) => {
     setLoading(true);
@@ -61,7 +75,7 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
-  return <TableContext.Provider value={{ rows, loading, error, searchRows }}>{children}</TableContext.Provider>;
+  return <TableContext.Provider value={{ rows, loading, error, searchRows, sortRows }}>{children}</TableContext.Provider>;
 };
 
 export const useTableContext = () => {
