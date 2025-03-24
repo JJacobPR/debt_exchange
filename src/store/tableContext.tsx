@@ -15,6 +15,7 @@ type tableContextType = {
   error?: string;
   searchRows: (phrase: string) => void;
   sortRows: (key: keyof tableItem, order: "asc" | "desc") => void;
+  getTop10Debts: () => void;
 };
 
 const TableContext = createContext<tableContextType | null>(null);
@@ -51,6 +52,25 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
     setRows(sortedRows);
   };
 
+  const getTop10Debts = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetTopDebts");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const data = await response.json();
+      setRows(data);
+      setError(undefined);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const searchRows = async (phrase: string) => {
     setLoading(true);
     try {
@@ -75,7 +95,7 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
-  return <TableContext.Provider value={{ rows, loading, error, searchRows, sortRows }}>{children}</TableContext.Provider>;
+  return <TableContext.Provider value={{ rows, loading, error, searchRows, sortRows, getTop10Debts }}>{children}</TableContext.Provider>;
 };
 
 export const useTableContext = () => {

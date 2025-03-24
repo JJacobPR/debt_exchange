@@ -1,15 +1,15 @@
 import { useTableContext } from "@store/tableContext";
 import styles from "./Header.module.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Header = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("");
-  const { searchRows } = useTableContext();
+  const { searchRows, getTop10Debts } = useTableContext();
   const [warning, setWarning] = useState<boolean>(false);
 
   const submitSearchForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchPhrase.length < 3) {
+    if (searchPhrase.length < 3 && searchPhrase.length > 0) {
       setWarning(true);
       const timer = setTimeout(() => {
         setWarning(false);
@@ -18,7 +18,8 @@ const Header = () => {
       return () => {
         clearTimeout(timer);
       };
-    } else searchRows(searchPhrase);
+    } else if (searchPhrase.length === 0) getTop10Debts();
+    else searchRows(searchPhrase);
   };
 
   return (

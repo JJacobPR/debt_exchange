@@ -23,6 +23,7 @@ const Table = () => {
     <div className={styles["debt-table"]}>
       <TableCategories />
       {loading && <LoadingCircle />}
+      {error && <p className={styles["error"]}>Wystąpił błąd, spróbuj ponownie później</p>}
       {!loading && !error && data && currentData.map((item: tableItem) => <TableRecord key={item.Id} name={item.Name} nip={item.NIP} value={item.Value} date={item.Date} />)}
       {!loading && !error && data && data.length === 0 && <p className={styles["no-data"]}>Brak wyników dla twoich kryteriów</p>}
       {!loading && !error && totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} goToPage={goToPage} />}
