@@ -14,7 +14,15 @@ const TableRecord = ({ name, nip, value, date }: tableRecordProps) => {
         <p>{name}</p>
         <p>{nip}</p>
         <p>{value}</p>
-        <p>{date}</p>
+        <p>
+          {new Intl.DateTimeFormat("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+            .format(new Date(date))
+            .replace(/\//g, "-")}
+        </p>
       </div>
       <hr className={styles["debt-table-record-line"]} />
     </div>
