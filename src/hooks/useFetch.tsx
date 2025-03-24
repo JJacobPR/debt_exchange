@@ -1,28 +1,38 @@
 import { useState, useEffect } from "react";
 
-export const useFetch = <T,>(url: string) => {
+export const useFetch = <T,>(url: string, method: string = "GET", body?: object) => {
   const [data, setData] = useState<T | null>(null);
-  const [isPending, setIsPending] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsPending(true);
+      setIsLoading(true);
       try {
-        const response = await fetch(url);
+        const options: RequestInit = {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          ...(body && { body: JSON.stringify(body) }),
+        };
+
+        const response = await fetch(url, options);
+
         if (!response.ok) throw new Error(response.statusText);
+
         const json: T = await response.json();
         setData(json);
         setError(null);
-      } catch (error) {
-        setError(`${error} Could not Fetch Data`);
+      } catch (err) {
+        setError(`${err} Could not Fetch Data`);
       } finally {
-        setIsPending(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [url]);
+  }, [url, method, body]);
 
-  return { data, isPending, error };
+  return { data, isLoading, error };
 };

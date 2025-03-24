@@ -1,13 +1,23 @@
+import { useTableContext } from "@store/tableContext";
 import styles from "./Header.module.scss";
+import { useState } from "react";
 
 const Header = () => {
+  const [searchPhrase, setSearchPhrase] = useState<string>("");
+  const { searchRows } = useTableContext();
+
+  const submitSearchForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    searchRows(searchPhrase);
+  };
+
   return (
     <div className={styles["header-wrapper"]}>
       <header className={styles["header"]}>
-        <div className="header__title">Podaj NIP lub nazwę użytkownika</div>
-        <form className="header__actions">
-          <input type="text" />
-          <button>Szukaj</button>
+        <h4>Podaj NIP lub nazwę użytkownika</h4>
+        <form onSubmit={submitSearchForm}>
+          <input type="text" onChange={(e) => setSearchPhrase(e.target.value)} />
+          <button type="submit">Szukaj</button>
         </form>
       </header>
     </div>

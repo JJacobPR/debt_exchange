@@ -26,6 +26,10 @@ export default defineConfig({
         find: "@ui",
         replacement: path.resolve(__dirname, "./src/ui"),
       },
+      {
+        find: "@store",
+        replacement: path.resolve(__dirname, "./src/store"),
+      },
     ],
   },
 });

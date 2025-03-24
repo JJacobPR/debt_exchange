@@ -21,6 +21,7 @@
       "@components/*": ["src/components/*"],
       "@hooks/*": ["src/hooks/*"],
       "@partials/*": ["src/assets/partials/partials.scss"],
+      "@store/*": ["src/store/*"],
       "@ui/*": ["src/ui/*"]
     },
 
