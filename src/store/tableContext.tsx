@@ -85,8 +85,11 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
 
       setRows(data);
       setError(undefined);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      let message;
+      if (err instanceof Error) message = err.message;
+      else message = String(error);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -119,8 +122,11 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
       });
       setRows(data);
       setError(undefined);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      let message;
+      if (err instanceof Error) message = err.message;
+      else message = String(error);
+      setError(message);
     } finally {
       setLoading(false);
     }
