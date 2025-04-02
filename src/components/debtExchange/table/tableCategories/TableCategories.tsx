@@ -1,82 +1,47 @@
 import { useState } from "react";
 import styles from "./TableCategories.module.scss";
-import { useTableContext } from "@store/tableContext";
-
-type sortType = "asc" | "desc" | "none";
+import { tableItem } from "@store/tableContext";
+import { useTableContext } from "@store/useTableContext";
 
 const TableCategories = () => {
   const { sortRows } = useTableContext();
-  const [debtorSort, setDebtorSort] = useState<sortType>("asc");
-  const [nipSort, setNipSort] = useState<sortType>("none");
-  const [valueSort, setValueSort] = useState<sortType>("none");
-  const [dateSort, setDateSort] = useState<sortType>("none");
+  const [sortState, setSortState] = useState<Omit<tableItem, "Id">>({
+    Name: "asc",
+    NIP: "none",
+    Value: "none",
+    Date: "none",
+  });
 
-  const updateDebtorSort = () => {
-    if (debtorSort === "asc") {
-      setDebtorSort("desc");
-      sortRows("Name", "desc");
-    } else {
-      setDebtorSort("asc");
-      sortRows("Name", "asc");
-    }
-    setNipSort("none");
-    setValueSort("none");
-    setDateSort("none");
-  };
+  const updateSort = (field: keyof Omit<tableItem, "Id">) => {
+    setSortState((prev) => {
+      const newSort = prev[field] === "asc" ? "desc" : "asc";
 
-  const updateNipSort = () => {
-    if (nipSort === "asc") {
-      setNipSort("desc");
-      sortRows("NIP", "desc");
-    } else {
-      setNipSort("asc");
-      sortRows("NIP", "asc");
-    }
-    setDebtorSort("none");
-    setValueSort("none");
-    setDateSort("none");
-  };
+      return {
+        Name: "none",
+        NIP: "none",
+        Value: "none",
+        Date: "none",
+        [field]: newSort,
+      };
+    });
 
-  const updateValueSort = () => {
-    if (valueSort === "asc") {
-      setValueSort("desc");
-      sortRows("Value", "desc");
-    } else {
-      setValueSort("asc");
-      sortRows("Value", "asc");
-    }
-    setDebtorSort("none");
-    setNipSort("none");
-    setDateSort("none");
-  };
-
-  const updateDateSort = () => {
-    if (dateSort === "asc") {
-      setDateSort("desc");
-      sortRows("Date", "desc");
-    } else {
-      setDateSort("asc");
-      sortRows("Date", "asc");
-    }
-    setDebtorSort("none");
-    setNipSort("none");
-    setValueSort("none");
+    sortRows(field, sortState[field] === "asc" ? "desc" : "asc");
   };
 
   return (
     <div className={styles["debt-table-categories"]}>
       <div className={styles["debt-table-categories-content"]}>
-        <p onClick={updateDebtorSort} className={`${styles["debt-table-categories-debtor"]} ${styles[debtorSort]}`}>
-          Dłużnik
+        <p onClick={() => updateSort("Name")} className={`${styles["debt-table-categories-debtor"]} ${styles[sortState.Name]}`}>
+          Debtor
         </p>
-        <p onClick={updateNipSort} className={`${styles["debt-table-categories-nip"]} ${styles[nipSort]}`}>
+        <p onClick={() => updateSort("NIP")} className={`${styles["debt-table-categories-nip"]} ${styles[sortState.NIP]}`}>
           NIP
         </p>
-        <p onClick={updateValueSort} className={`${styles["debt-table-categories-value"]} ${styles[valueSort]}`}>
-          KWOTA ZADŁUŻENIA
+        <p onClick={() => updateSort("Value")} className={`${styles["debt-table-categories-value"]} ${styles[sortState.Value]}`}>
+          Amount
         </p>
-        <p onClick={updateDateSort} className={`${styles["debt-table-categories-date"]} ${styles[dateSort]}`}>
-          DATA POWSTANIA ZOBOWIĄZANIA
+        <p onClick={() => updateSort("Date")} className={`${styles["debt-table-categories-date"]} ${styles[sortState.Date]}`}>
+          Date
         </p>
       </div>
       <hr className={styles["debt-table-categories-line"]} />

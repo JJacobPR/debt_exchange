@@ -1,7 +1,7 @@
 import { useFetch } from "@hooks/useFetch";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
-type tableItem = {
+export type tableItem = {
   Id: number;
   Name: string;
   NIP: string;
@@ -20,7 +20,7 @@ type tableContextType = {
   getTop10Debts: () => void;
 };
 
-const TableContext = createContext<tableContextType | null>(null);
+export const TableContext = createContext<tableContextType | null>(null);
 
 export const TableContextProvider = ({ children }: { children: ReactNode }) => {
   const [rows, setRows] = useState<tableItem[]>([]);
@@ -33,7 +33,7 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (data) {
-      setRows(data.sort((a, b) => (a.Name < b.Name ? -1 : 1)));
+      setRows(sortData(data, currentOrderKey, currentOrder));
     }
 
     setLoading(isLoading);
@@ -46,100 +46,50 @@ export const TableContextProvider = ({ children }: { children: ReactNode }) => {
   const setOrderOptions = (key: keyof tableItem, order: "asc" | "desc") => {
     setCurrentOrderKey(key);
     setCurrentOrder(order);
+    setRows(sortData(rows, key, order));
   };
 
-  const sortRows = (key: keyof tableItem, order: "asc" | "desc" = "asc") => {
-    setOrderOptions(key, order);
-    const sortedRows = [...rows].sort((a, b) => {
-      if (a[key] < b[key]) {
-        return order === "asc" ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return order === "asc" ? 1 : -1;
-      }
-      return 0;
-    });
-    setRows(sortedRows);
+  const sortData = (data: tableItem[], key: keyof tableItem, order: "asc" | "desc") => {
+    return [...data].sort((a, b) => (a[key] < b[key] ? (order === "asc" ? -1 : 1) : a[key] > b[key] ? (order === "asc" ? 1 : -1) : 0));
+  };
+
+  const fetchData = async (url: string, options?: RequestInit) => {
+    try {
+      setLoading(true);
+      const response = await fetch(url, options);
+
+      if (!response.ok) throw new Error("Failed to fetch data");
+
+      const data: tableItem[] = await response.json();
+      setLoading(false);
+      setError(undefined);
+      return sortData(data, currentOrderKey, currentOrder);
+    } catch (err) {
+      setLoading(false);
+      setError(err instanceof Error ? err.message : "Unknown error");
+      return [];
+    }
   };
 
   const getTop10Debts = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetTopDebts");
+    setRows(await fetchData("https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetTopDebts"));
+  };
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const data: tableItem[] = await response.json();
-
-      data.sort((a, b) => {
-        if (a[currentOrderKey] < b[currentOrderKey]) {
-          return currentOrder === "asc" ? -1 : 1;
-        }
-        if (a[currentOrderKey] > b[currentOrderKey]) {
-          return currentOrder === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-
-      setRows(data);
-      setError(undefined);
-    } catch (err) {
-      let message;
-      if (err instanceof Error) message = err.message;
-      else message = String(error);
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
+  const sortRows = async (key: keyof tableItem, order: "asc" | "desc") => {
+    setOrderOptions(key, order);
+    setRows(sortData(rows, key, order));
   };
 
   const searchRows = async (phrase: string) => {
-    setLoading(true);
-    try {
-      const response = await fetch("https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetFilteredDebts", {
+    const body = JSON.stringify({ phrase });
+    setRows(
+      await fetchData("https://rekrutacja-webhosting-it.krd.pl/api/Recruitment/GetFilteredDebts", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phrase }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const data: tableItem[] = await response.json();
-      data.sort((a, b) => {
-        if (a[currentOrderKey] < b[currentOrderKey]) {
-          return currentOrder === "asc" ? -1 : 1;
-        }
-        if (a[currentOrderKey] > b[currentOrderKey]) {
-          return currentOrder === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-      setRows(data);
-      setError(undefined);
-    } catch (err) {
-      let message;
-      if (err instanceof Error) message = err.message;
-      else message = String(error);
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
+        headers: { "Content-Type": "application/json" },
+        body,
+      })
+    );
   };
+
   return <TableContext.Provider value={{ rows, loading, error, searchRows, sortRows, getTop10Debts }}>{children}</TableContext.Provider>;
-};
-
-export const useTableContext = () => {
-  const tableContext = useContext(TableContext);
-
-  if (!tableContext) {
-    throw new Error("useTableContext must be used within a TableContextProvider");
-  }
-
-  return tableContext;
 };

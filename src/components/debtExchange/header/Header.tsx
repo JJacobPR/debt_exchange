@@ -1,4 +1,4 @@
-import { useTableContext } from "@store/tableContext";
+import { useTableContext } from "@store/useTableContext";
 import styles from "./Header.module.scss";
 import { useState } from "react";
 
@@ -25,12 +25,12 @@ const Header = () => {
   return (
     <div className={styles["header-wrapper"]}>
       <header className={styles["header"]}>
-        <h4>Podaj NIP lub nazwę użytkownika</h4>
+        <h4>Provide NIP or name</h4>
         <form onSubmit={submitSearchForm}>
           <input type="text" onChange={(e) => setSearchPhrase(e.target.value)} />
-          <button type="submit">Szukaj</button>
+          <button type="submit">Search</button>
         </form>
-        <p className={`${styles["warning"]} ${warning && styles["warning-fade-in"]}`}>Wprowadź minimalnie 3 znaki</p>
+        <p className={`${styles["warning"]} ${warning && styles["warning-fade-in"]}`}>Provide at least 3 characters</p>
       </header>
     </div>
   );
