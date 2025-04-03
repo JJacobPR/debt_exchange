@@ -13,8 +13,6 @@ type tableContextType = {
   rows: tableItem[];
   loading?: boolean;
   error?: string;
-  currentSearchKey?: keyof tableItem;
-  currentSearchOrder?: "asc" | "desc";
   searchRows: (phrase: string) => void;
   sortRows: (key: keyof tableItem, order: "asc" | "desc") => void;
   getTop10Debts: () => void;
